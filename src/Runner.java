@@ -18,7 +18,9 @@ public class Runner {
         String typedWords = s.nextLine();
         double end = LocalTime.now().toNanoOfDay();
         double elapsedTime = (end - start) / 1000000000.0;
-        System.out.println(t.getWPM(typedWords, elapsedTime));
+        double accuracy = t.getAccuracy(t.getPrompts().get(j), typedWords);
+        System.out.println(t.getWPM(typedWords, elapsedTime,accuracy ) + " WPM");
+        System.out.println(String.format("%.02f",accuracy) + "%");
     }
 
 
