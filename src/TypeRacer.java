@@ -6,6 +6,7 @@ public class TypeRacer {
     private int words;
     private Score s;
     private String prompt;
+    private String basic;
 
     public TypeRacer(int words, Score s) throws FileNotFoundException {
         prompts = new ArrayList<>();
@@ -14,6 +15,7 @@ public class TypeRacer {
         this.words = words;
         int p = (int) (Math.random() * prompts.size());
         prompt = prompts.get(p);
+        basic = "";
     }
 
     public ArrayList<String> getPrompts() {
@@ -57,7 +59,12 @@ public class TypeRacer {
             }
         }
         prompt = basic;
+        this.basic = basic;
         return result;
+    }
+
+    public String getBasic(){
+        return basic;
     }
 
     public int getWordCount(String p){

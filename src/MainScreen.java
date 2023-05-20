@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import static java.lang.Thread.sleep;
 
-public class MainScreen implements Runnable, ActionListener {
+public class MainScreen implements Runnable, ActionListener, KeyListener {
     private JFrame frame;
     private JPanel panel;
     private JButton start;
@@ -21,30 +23,43 @@ public class MainScreen implements Runnable, ActionListener {
 
     private boolean checker;
     private String promptText;
+    private JTextField typingArea;
+    private JLabel score;
+    private Score sc;
+    private TypeRacer t;
+    private boolean alreadyStarted;
+    private double timeStart;
+    private double timeEnd;
 
 
     public MainScreen() throws FileNotFoundException {
+        sc = new Score();
+        t = new TypeRacer(30, sc);
         frame = new JFrame();
         panel = new JPanel();
         start = new JButton("Start");
+        score = new JLabel();
         start.addActionListener(this);
+        typingArea = new JTextField(20);
+        typingArea.addKeyListener(this);
         prompt = new JLabel();
-        Score sc = new Score();
-        TypeRacer t = new TypeRacer(30, sc);
-        promptText = t.printPrompt();
+        prompt.setPreferredSize(new Dimension(900, 100));
         panel.setBorder(BorderFactory.createEmptyBorder(500, 500, 500, 500));
         panel.setLayout(new GridLayout(0, 1));
         panel.add(prompt);
         panel.add(start);
+        panel.add(typingArea);
+        panel.add(score);
         frame.add(panel, BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("CowType");
         frame.pack();
         frame.setVisible(true);
         checker = false;
+        alreadyStarted = false;
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException, AWTException {
+//    public static void main(String[] args) throws IOException, InterruptedException, AWTException {
 //        Score sc = new Score();
 //        Scanner s = new Scanner(System.in);
 //        System.out.println("Welcome to CowType!");
@@ -84,7 +99,7 @@ public class MainScreen implements Runnable, ActionListener {
 //        {
 //            System.err.println("IOException: " + ioe.getMessage());
 //        }
-    }
+//    }
 
     public void startGameThread()
     {
@@ -95,10 +110,48 @@ public class MainScreen implements Runnable, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton source = (JButton)e.getSource();
+        promptText = t.printPrompt();
+        prompt.setText(promptText);
         if (source.getText().equals("Start")) {
             System.out.println("Test");
             checker = true;
+            typingArea.setVisible(true);
+            score.setText(sc.printScore() + " ");
         }
+    }
+
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+        if (e.getKeyCode() == KeyEvent.VK_ENTER){
+            timeEnd = LocalTime.now().toNanoOfDay();
+            typingArea.setVisible(false);
+            double accuracy = t.getAccuracy(typingArea.getText());
+            double elapsedTime = (timeEnd - timeStart) / 1000000000.0;
+            prompt.setText("WPM: " + t.getWPM(typingArea.getText(), elapsedTime, accuracy) + "  Accuracy: " + String.format("%.2f", accuracy)+ "%");
+            try
+            {
+                String filename= "src/PlayerScores.txt";
+                FileWriter fw = new FileWriter(filename,false); //the true will append the new data
+                fw.write(sc.printScore());//appends the string to the file
+                fw.flush();
+                fw.close();
+            }
+            catch(IOException ioe)
+            {
+                System.err.println("IOException: " + ioe.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 
     @Override
@@ -123,5 +176,7 @@ public class MainScreen implements Runnable, ActionListener {
         TimeUnit.SECONDS.sleep(1);
         prompt.setText(promptText);
         TimeUnit.SECONDS.sleep(1);
+        checker = false;
+        timeStart = LocalTime.now().toNanoOfDay();
     }
 }
