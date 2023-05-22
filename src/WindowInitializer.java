@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 public class WindowInitializer {
     public WindowInitializer() throws FileNotFoundException {
 
-        MainScreen mainScreen = new MainScreen();
-        mainScreen.startGameThread();
+        MainGui mainGui = new MainGui();
+        mainGui.startGameThread();
     }
 }

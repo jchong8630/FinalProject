@@ -19,12 +19,20 @@ public class Score {
         }
     }
 
+    public ArrayList<String> getScores() {
+        return scores;
+    }
+
+    public void setScores() throws FileNotFoundException {
+        scores = TextDatabaseCreator.getTextDB("src/PlayerScores.txt");
+    }
+
     public void addWPM(int wpm){
-        this.wpm.add(wpm);
+        this.wpm.add(0, wpm);
     }
 
     public void addAccuracy(double acc){
-        accuracy.add(acc);
+        accuracy.add(0, acc);
     }
 
     public String printScore(){
