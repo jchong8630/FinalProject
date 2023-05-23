@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -10,13 +12,14 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class MainGui extends JFrame implements Runnable, ActionListener, KeyListener {
+public class MainGui extends JFrame implements Runnable, ActionListener, KeyListener, ChangeListener {
     private JPanel mainPanel;
     private JPanel bottomPanel;
     private JPanel topPanel;
     private JLabel prompt;
     private JTextField typingArea;
     private JButton start;
+    private JLabel title;
     private JLabel scoreLabel;
     private JLabel score1;
     private JLabel score2;
@@ -26,6 +29,8 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
     private JLabel score6;
     private JLabel score7;
     private JLabel score8;
+    private JSlider slider;
+    private JLabel wordCount;
     private Thread gameThread;
     private double timeStart;
     private double timeEnd;
@@ -38,9 +43,10 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
 
         // DO NOT CHANGE
         this.setContentPane(mainPanel);
-        this.setTitle("Whatever");
-        this.setSize(1100, 500);
+        this.setTitle("CowType");
+        this.setSize(1500, 700);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
         // END DO NOT CHANGE
 
         sc = new Score();
@@ -49,6 +55,8 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
         checker = false;
         start.addActionListener(this);
         typingArea.addKeyListener(this);
+        slider.addChangeListener(this);
+        t.setWords(slider.getValue());
         scores = new ArrayList<>();
         scores.add(score1);
         scores.add(score2);
@@ -126,6 +134,10 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
     public void keyReleased(KeyEvent e) {
 
     }
+    public void stateChanged(ChangeEvent e) {
+        JSlider source = (JSlider)e.getSource();
+        t.setWords(source.getValue());
+    }
 
     @Override
     public void run() {
@@ -137,6 +149,7 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
                     throw new RuntimeException(e);
                 }
             }
+            wordCount.setText(slider.getValue() + "");
         }
     }
 
