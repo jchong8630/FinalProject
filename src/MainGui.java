@@ -31,6 +31,7 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
     private JLabel score8;
     private JSlider slider;
     private JLabel wordCount;
+    private JLabel blank;
     private Thread gameThread;
     private double timeStart;
     private double timeEnd;
@@ -43,7 +44,7 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
 
         // DO NOT CHANGE
         this.setContentPane(mainPanel);
-        this.setTitle("CowType");
+        this.setTitle("GorillaType");
         this.setSize(1500, 700);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -149,7 +150,10 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
                     throw new RuntimeException(e);
                 }
             }
-            wordCount.setText(slider.getValue() + "");
+            wordCount.setText(slider.getValue() + "  ");
+            if (slider.getValue() == 0){
+                slider.setValue(1);
+            }
         }
     }
 

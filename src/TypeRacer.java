@@ -34,7 +34,6 @@ public class TypeRacer {
         while(wordCount < words){
                 idx += 1;
                 prompt = prompts.get(idx);
-                System.out.println(idx);
                 wordCount = getWordCount(prompt);
         }
         for (int i = 0; i < prompt.length(); i++){
