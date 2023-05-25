@@ -1,10 +1,10 @@
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,13 +12,13 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class MainGui extends JFrame implements Runnable, ActionListener, KeyListener, ChangeListener {
+public class MainGui extends JFrame implements Runnable, ActionListener, KeyListener, ChangeListener, MouseListener {
     private JPanel mainPanel;
     private JPanel bottomPanel;
     private JPanel topPanel;
     private JLabel prompt;
     private JTextField typingArea;
-    private JButton start;
+    private JLabel start;
     private JLabel title;
     private JLabel scoreLabel;
     private JLabel score1;
@@ -54,7 +54,7 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
         t = new TypeRacer(30, sc);
         promptText = "";
         checker = false;
-        start.addActionListener(this);
+        start.addMouseListener(this);
         typingArea.addKeyListener(this);
         slider.addChangeListener(this);
         t.setWords(slider.getValue());
@@ -85,7 +85,7 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
     public void actionPerformed(ActionEvent e) {
         JButton source = (JButton)e.getSource();
         promptText = t.printPrompt();
-        prompt.setText(promptText);
+        prompt.setText("         " + promptText);
         if (source.getText().equals("Start")) {
             typingArea.setText("");
             checker = true;
@@ -100,6 +100,47 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
                 scores.get(i).setText(s.get(i));
             }
         }
+    }
+
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        JLabel source = (JLabel)e.getSource();
+        promptText = t.printPrompt();
+        prompt.setText(promptText);
+        if (source.getText() == "") {
+            typingArea.setText("");
+            checker = true;
+            typingArea.setVisible(true);
+            try {
+                sc.setScores();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+            ArrayList<String> s = sc.getScores();
+            for (int i = 0; i < scores.size(); i++){
+                scores.get(i).setText(s.get(i));
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 
 
@@ -158,11 +199,11 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
     }
 
     public void timer() throws InterruptedException {
-        prompt.setText("3");
+        prompt.setText("         3");
         TimeUnit.SECONDS.sleep(1);
-        prompt.setText("2");
+        prompt.setText("         2");
         TimeUnit.SECONDS.sleep(1);
-        prompt.setText("1");
+        prompt.setText("         1");
         TimeUnit.SECONDS.sleep(1);
         prompt.setText(promptText);
         TimeUnit.SECONDS.sleep(1);
