@@ -88,6 +88,11 @@ public class TypeRacer {
     public void setWords(int w){
         words = w;
     }
+
+    public int getWords() {
+        return words;
+    }
+
     public double getAccuracy(String typed){
         String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz,.?' ";
         int[] promptLetterCount  = new int[57];

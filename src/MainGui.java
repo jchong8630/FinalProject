@@ -1,6 +1,8 @@
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.TextUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
@@ -54,8 +56,13 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
         t = new TypeRacer(30, sc);
         promptText = "";
         checker = false;
+        slider.setOpaque(false);
+        slider.setBackground(new Color(180, 180, 180));
+        slider.setForeground(new Color(68, 106, 156));
+        slider.setUI(new JSliderUI(slider));
         start.addMouseListener(this);
         typingArea.addKeyListener(this);
+        typingArea.setVisible(false);
         slider.addChangeListener(this);
         t.setWords(slider.getValue());
         scores = new ArrayList<>();
@@ -156,7 +163,8 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
             typingArea.setVisible(false);
             double accuracy = t.getAccuracy(typingArea.getText());
             double elapsedTime = (timeEnd - timeStart) / 1000000000.0;
-            prompt.setText("WPM: " + t.getWPM(typingArea.getText(), elapsedTime, accuracy) + "  Accuracy: " + String.format("%.2f", accuracy)+ "%");
+            prompt.setText("         WPM: " + t.getWPM(typingArea.getText(), elapsedTime, accuracy) + "  Accuracy: " + String.format("%.2f", accuracy)+ "%");
+            prompt.setFont(new Font("Showcard Gothic", Font.PLAIN, 30));
             try
             {
                 String filename= "src/PlayerScores.txt";
@@ -191,7 +199,7 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
                     throw new RuntimeException(e);
                 }
             }
-            wordCount.setText(slider.getValue() + "  ");
+            wordCount.setText(slider.getValue() + "    ");
             if (slider.getValue() == 0){
                 slider.setValue(1);
             }
@@ -199,14 +207,27 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
     }
 
     public void timer() throws InterruptedException {
+        prompt.setFont(new Font("Showcard Gothic", Font.PLAIN, 30));
         prompt.setText("         3");
         TimeUnit.SECONDS.sleep(1);
         prompt.setText("         2");
         TimeUnit.SECONDS.sleep(1);
         prompt.setText("         1");
         TimeUnit.SECONDS.sleep(1);
-        prompt.setText(promptText);
-        TimeUnit.SECONDS.sleep(1);
+        prompt.setFont(new Font("JetBrains Mono", Font.BOLD, 15));
+        if (t.getWords() <= 10){
+            prompt.setFont(new Font("JetBrains Mono", Font.BOLD, 30));
+        }
+        if (t.getWords() <= 20){
+            prompt.setFont(new Font("JetBrains Mono", Font.BOLD, 25));
+        }
+        else if (t.getWords() <= 30){
+            prompt.setFont(new Font("JetBrains Mono", Font.BOLD, 20));
+        }
+        else if (t.getWords() <= 35){
+            prompt.setFont(new Font("JetBrains Mono", Font.BOLD, 17));
+        }
+        prompt.setText("         " + promptText);
         checker = false;
         timeStart = LocalTime.now().toNanoOfDay();
     }
