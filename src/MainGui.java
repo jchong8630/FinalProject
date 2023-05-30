@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
@@ -34,6 +35,7 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
     private JSlider slider;
     private JLabel wordCount;
     private JLabel blank;
+    private JPanel typingPanel;
     private Thread gameThread;
     private double timeStart;
     private double timeEnd;
@@ -47,7 +49,7 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
         // DO NOT CHANGE
         this.setContentPane(mainPanel);
         this.setTitle("GorillaType");
-        this.setSize(1500, 700);
+        this.setSize(1500, 800);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         // END DO NOT CHANGE
@@ -56,9 +58,10 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
         t = new TypeRacer(30, sc);
         promptText = "";
         checker = false;
+        typingArea.setBorder(new LineBorder(new Color(50, 52, 55),2));
         slider.setOpaque(false);
         slider.setBackground(new Color(180, 180, 180));
-        slider.setForeground(new Color(68, 106, 156));
+        slider.setForeground(new Color(226, 183, 20));
         slider.setUI(new JSliderUI(slider));
         start.addMouseListener(this);
         typingArea.addKeyListener(this);
@@ -92,7 +95,7 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
     public void actionPerformed(ActionEvent e) {
         JButton source = (JButton)e.getSource();
         promptText = t.printPrompt();
-        prompt.setText("         " + promptText);
+        prompt.setText(promptText);
         if (source.getText().equals("Start")) {
             typingArea.setText("");
             checker = true;
@@ -163,7 +166,7 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
             typingArea.setVisible(false);
             double accuracy = t.getAccuracy(typingArea.getText());
             double elapsedTime = (timeEnd - timeStart) / 1000000000.0;
-            prompt.setText("         WPM: " + t.getWPM(typingArea.getText(), elapsedTime, accuracy) + "  Accuracy: " + String.format("%.2f", accuracy)+ "%");
+            prompt.setText("WPM: " + t.getWPM(typingArea.getText(), elapsedTime, accuracy) + "  Accuracy: " + String.format("%.2f", accuracy)+ "%");
             prompt.setFont(new Font("Showcard Gothic", Font.PLAIN, 30));
             try
             {
@@ -208,11 +211,11 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
 
     public void timer() throws InterruptedException {
         prompt.setFont(new Font("Showcard Gothic", Font.PLAIN, 30));
-        prompt.setText("         3");
+        prompt.setText("3");
         TimeUnit.SECONDS.sleep(1);
-        prompt.setText("         2");
+        prompt.setText("2");
         TimeUnit.SECONDS.sleep(1);
-        prompt.setText("         1");
+        prompt.setText("1");
         TimeUnit.SECONDS.sleep(1);
         prompt.setFont(new Font("JetBrains Mono", Font.BOLD, 15));
         if (t.getWords() <= 10){
@@ -227,7 +230,7 @@ public class MainGui extends JFrame implements Runnable, ActionListener, KeyList
         else if (t.getWords() <= 35){
             prompt.setFont(new Font("JetBrains Mono", Font.BOLD, 17));
         }
-        prompt.setText("         " + promptText);
+        prompt.setText(promptText);
         checker = false;
         timeStart = LocalTime.now().toNanoOfDay();
     }

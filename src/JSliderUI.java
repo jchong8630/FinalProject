@@ -35,9 +35,9 @@ public class JSliderUI extends BasicSliderUI {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(slider.getBackground());
         if (slider.getOrientation() == JSlider.VERTICAL) {
-            g2.fillRoundRect(slider.getWidth() / 2 - 2, 2, 4, slider.getHeight(), 1, 1);
+            g2.fillRoundRect(slider.getWidth() / 2 - 2, -1, 4, slider.getHeight(), 1, 1);
         } else {
-            g2.fillRoundRect(2, slider.getHeight() / 2 - 2, slider.getWidth() - 5, 4, 1, 1);
+            g2.fillRoundRect(2, slider.getHeight() / 2 - 5, slider.getWidth() - 5, 4, 1, 1);
         }
     }
 }
