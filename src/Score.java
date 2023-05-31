@@ -12,8 +12,8 @@ public class Score {
         wpm = new ArrayList<>();
         accuracy = new ArrayList<>();
         scores = TextDatabaseCreator.getTextDB("src/PlayerScores.txt");
-        for (int i = 0; i < scores.size(); i++){
-            String[] score = scores.get(i).split(" ");
+        for (String s : scores) {
+            String[] score = s.split(" ");
             wpm.add(Integer.parseInt(score[0]));
             accuracy.add(Double.parseDouble(score[4].substring(0, score[4].length() - 2)));
         }

@@ -26,8 +26,6 @@ public class TypeRacer {
 
     public String printPrompt(){
         String result = "";
-        String basic = "";
-        int count = 0;
         int length = 0;
         int c = 0;
         int wordCount = getWordCount(prompt);
@@ -46,27 +44,12 @@ public class TypeRacer {
             }
         }
         for (int i = 0; i < length; i++){
-            if (prompt.charAt(i) == ' '){
-                count++;
-            }
-            if ((count % 20 == 0) && (count != 0)){
-                result += prompt.charAt(i) + "\n";
-                basic += prompt.charAt(i);
-                count++;
-            }
-            else {
-                result += prompt.charAt(i) + "";
-                basic += prompt.charAt(i);
-            }
+            result += prompt.charAt(i);
         }
-        prompt = basic;
-        this.basic = basic;
+        prompt = result;
         return result;
     }
 
-    public String getBasic(){
-        return basic;
-    }
 
     public int getWordCount(String p){
         int count = 0;
